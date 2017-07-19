@@ -95,8 +95,8 @@ class FlowNet:
             print('Caffe tool binaries not found. Did you compile caffe with tools (make all tools)?')
             sys.exit(1)
         
-        using_lists = False
-        list_length = 1
+        using_lists = True
+        list_length = 5000
 
         if img_files[0][-4:].lower() == '.txt':
             print("Checking the images in your lists...")
@@ -135,9 +135,14 @@ class FlowNet:
 
             with open('tmp/img2.txt', "w") as tfile:
                 tfile.write("%s\n" % img_files[1])
+
         else:
-            subprocess.call(['cp', img_files[0], 'tmp/img1.txt'])
-            subprocess.call(['cp', img_files[1], 'tmp/img2.txt'])
+            #subprocess.call(['cp', img_files[0], 'tmp/img1.txt'])
+            #subprocess.call(['cp', img_files[1], 'tmp/img2.txt'])
+	    with open("tmp/img1.txt", "w") as text_file1:
+    		text_file1.write(img_files[0])
+	    with open("tmp/img2.txt", "w") as text_file2:
+    		text_file2.write(img_files[1])
 
         divisor = 64.
         adapted_width = ceil(width/divisor) * divisor
@@ -169,7 +174,7 @@ class FlowNet:
         args = [FlowNet.caffe_bin, 'test', '-model', 'tmp/deploy.prototxt',
                 '-weights', model_folder + '/flownet_official.caffemodel',
                 '-iterations', str(list_length),
-                '-gpu', '1']
+                '-gpu', '0']
 
         cmd = str.join(' ', args)
         print('Executing %s' % cmd)
