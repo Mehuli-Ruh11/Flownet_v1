@@ -11,24 +11,25 @@ this_dir = os.path.dirname(os.path.realpath(__file__))
 
 def test_middlebury():
     # setting up
-    middlebury_image = 'data/other-data'
-    middlebury_flow = 'data/other-gt-flow'
-    img1_name = 'frame10_rain.png'
-    img2_name = 'frame11_rain.png'
-    flow_name = 'flow10.flo'
+    middlebury_image_1 = 'data/test/t0'
+    middlebury_image_2 = 'data/test/t1'
+    middlebury_flow = 'data/test/flow'
+    img1_name = '00000.png'
+    img2_name = '00000.png'
+    flow_name = '00000.flo'
     prediction_file = 'flownets-pred-0000000.flo'
     result_file = 'result.txt'
     result = open(result_file , 'wb')
     sum_error = 0
 
     # Retrieve image and flow information
-    folder_names = os.listdir(middlebury_image)
+    folder_names = os.listdir(data/test)
 
     for folder in folder_names:
         # input images and ground truth flow
         img_files = []
-        img_files.append(os.path.join(middlebury_image, folder, img1_name))
-        img_files.append(os.path.join(middlebury_image, folder, img2_name))
+        img_files.append(os.path.join(middlebury_image_1, folder, img1_name))
+        img_files.append(os.path.join(middlebury_image_2, folder, img2_name))
         ground_truth_file = os.path.join(middlebury_flow, folder, flow_name)
 
         # sanity check
@@ -36,7 +37,7 @@ def test_middlebury():
             os.remove(prediction_file)
 
         # invoke FlowNet
-        FlowNet.run(this_dir, img_files, './model_simple')
+        FlowNet.run(this_dir, img_files, './model_corr')
 
         # evaluate result
         epe = fl.evaluate_flow_file(ground_truth_file, prediction_file)
@@ -136,20 +137,21 @@ def test_flownet():
 	sum_error = 0
 	sum_px_error = 0
 	result = open('result.txt', 'wb')
-	prediction_file = 'flownets-pred-0000000.flo'
+	prediction_file = 'flownetc-pred-0004999.flo'
 	img1_list = open('img1_list_test.txt', 'r').readlines()
 	img2_list = open('img2_list_test.txt', 'r').readlines()
 	flow_list = open('flo_list_test.txt', 'r').readlines()
 	length = len(img1_list)
 	
-	for i in range(length):
+	for i in range(0,1):
 		img_files = []
 		img_files.append(img1_list[i].strip())
 		img_files.append(img2_list[i].strip())
 		# sanity check
 		if os.path.exists(prediction_file):
 			os.remove(prediction_file)
-		FlowNet.run(this_dir, img_files, './model_simple')
+
+		FlowNet.run(this_dir, img_files, './model_corr')
 		epe = fl.evaluate_flow_file(flow_list[i].strip(), prediction_file)
 		flow = fl.read_flow(prediction_file)
 		[height, width, channels] = flow.shape
