@@ -37,7 +37,29 @@ def show_flow(filename):
 
 
 # WARNING: this will work on little-endian architectures (eg Intel x86) only!
-def read_flow(filename):
+# def read_flow(filename):
+#     f = open(filename, 'rb')
+#     magic = np.fromfile(f, np.float32, count=1)
+#     data2d = None
+
+#     if 202021.25 != magic:
+#         print 'Magic number incorrect. Invalid .flo file'
+#     else:
+#         w = np.fromfile(f, np.int32, count=1)
+#         h = np.fromfile(f, np.int32, count=1)
+#         print "Reading %d x %d flo file" % (h, w)
+#         data2d = np.fromfile(f, np.float32, count=2 * w * h)
+#         # reshape data into 3D array (columns, rows, channels)
+#         data2d = np.resize(data2d, (h, w, 2))
+#     f.close()
+#     return data2d
+
+def read_flo_file(filename):
+    """
+    Read from Middlebury .flo file
+    :param flow_file: name of the flow file
+    :return: optical flow data in matrix
+    """
     f = open(filename, 'rb')
     magic = np.fromfile(f, np.float32, count=1)
     data2d = None
@@ -47,12 +69,29 @@ def read_flow(filename):
     else:
         w = np.fromfile(f, np.int32, count=1)
         h = np.fromfile(f, np.int32, count=1)
-        print "Reading %d x %d flo file" % (h, w)
+        print "Reading %d x %d flow file in .flo format" % (h, w)
         data2d = np.fromfile(f, np.float32, count=2 * w * h)
         # reshape data into 3D array (columns, rows, channels)
-        data2d = np.resize(data2d, (h, w, 2))
+        data2d = np.resize(data2d, (h[0], w[0], 2))
     f.close()
     return data2d
+
+def read_flow(filename):
+    """
+    read optical flow data from flow file
+    :param filename: name of the flow file
+    :return: optical flow data in numpy array
+    """
+    if filename.endswith('.flo'):
+        flow = read_flo_file(filename)
+    elif filename.endswith('.png'):
+        flow = read_png_file(filename)
+    elif filename.endswith('.pfm'):
+        flow = read_pfm_file(filename)
+    else:
+        raise Exception('Invalid flow file format!')
+
+    return flow    
 
 
 # Calculate average end point error
