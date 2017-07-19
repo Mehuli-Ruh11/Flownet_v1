@@ -1,25 +1,43 @@
 net: "model_corr/train.prototxt"
+
+#base_lr: 0.0001
+
+#lr_policy: "multistep"
+#gamma: 0.5
+#stepvalue: 20
+#stepvalue: 40
+#stepvalue: 60
+#stepvalue: 1000
+
+#momentum: 0.9
+
+#weight_decay: 0.0004
+#max_iter: 2000
+#snapshot: 200
+#snapshot_prefix: "flow"
+
+
 #test_iter: 80
 #test_interval: 5000
-base_lr: 0.0001
+base_lr: 0.00001
 
 lr_policy: "multistep"
 gamma: 0.5
-stepvalue: 400000
-stepvalue: 600000
-stepvalue: 800000
-stepvalue: 1000000
+stepvalue: 2000
+stepvalue: 4000
+stepvalue: 6000
+stepvalue: 8000
 
 momentum: 0.9
 
 weight_decay: 0.0004
-max_iter: 1200000
-snapshot: 20000
+max_iter: 12000
+snapshot: 500
 snapshot_prefix: "flow"
 
-solver_mode: GPU
+solver_mode: GPU  # Some of our layers only support GPU
 type: "Adam"
 momentum2: 0.999
 
-display: 50
+display: 50 
 
